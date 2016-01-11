@@ -1,19 +1,20 @@
 package tmpl
 
 import "errors"
+import "golang.org/x/tools/godoc/vfs"
 
 type Template interface {
 	Create() error
 }
 
 func New(path string) (Template, error) {
-	return &pathTemplate{path}, nil
+	return &fsTemplate{vfs.OS(path)}, nil
 }
 
-type pathTemplate struct {
-	path string
+type fsTemplate struct {
+	fs vfs.FileSystem
 }
 
-func (*pathTemplate) Create() error {
+func (*fsTemplate) Create() error {
 	return errors.New("not implemented")
 }
