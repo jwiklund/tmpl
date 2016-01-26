@@ -151,3 +151,13 @@ func TestIOListRead(t *testing.T) {
 		t.Fatal("wrong result")
 	}
 }
+
+func TestIORestrict(t *testing.T) {
+	target := &fsRoot{memfs.Create(), "/"}
+	testWrite(t, target, "sub1/leaf1", "hello")
+
+	restricted := target.Restrict("sub1")
+	if testRead(t, restricted, "leaf1") != "hello" {
+		t.Fatal("expected hello")
+	}
+}

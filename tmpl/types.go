@@ -8,11 +8,14 @@ var notFound error = errors.New("does not exist")
 
 type Target interface {
 	Writer(path string) (io.Writer, error)
+	Reader(path string) (io.Reader, error)
 }
 
 type Template interface {
 	Properties() (io.Reader, error)
+
 	Create(env Environment, target Target) error
+	Compare(env Environment, target Target) (Environment, error)
 }
 
 type Environment map[string]string

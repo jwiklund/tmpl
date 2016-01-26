@@ -41,6 +41,14 @@ func (fsRoot *fsRoot) Reader(path string) (io.Reader, error) {
 	return file, nil
 }
 
+func (fsr *fsRoot) Restrict(path string) *fsRoot {
+	root := fsr.root
+	if root[len(root)-1] != fsr.fs.PathSeparator() {
+		root = root + string(fsr.fs.PathSeparator())
+	}
+	return &fsRoot{fsr.fs, root + path}
+}
+
 type FilterFile func(string, bool) bool
 
 func FilterFileAllowAll(path string, dir bool) bool {
