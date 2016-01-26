@@ -15,7 +15,12 @@ func main() {
 		fmt.Printf("Failed to read template %s\n", err.Error())
 		return
 	}
-	if err = template.Create(); err != nil {
+	target, err := tmpl.GetTarget(".")
+	if err != nil {
+		fmt.Println("Failed to create target %s\n", err.Error())
+		return
+	}
+	if err = template.Create(target); err != nil {
 		fmt.Printf("Failed to create template %s\n", err.Error())
 		return
 	}
