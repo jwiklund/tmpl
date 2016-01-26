@@ -5,14 +5,14 @@ import "errors"
 import "strings"
 
 func GetEnvironment(tmpl Template, args ...string) (Environment, error) {
-	props, err := readEnvProps(tmpl)
+	props, err := envReadProps(tmpl)
 	if err != nil {
 		return nil, err
 	}
 	env := map[string]string{}
 
 	for _, arg := range args {
-		key, value, err := readEnvArg(arg)
+		key, value, err := envReadArg(arg)
 		if err != nil {
 			return nil, err
 		}
@@ -37,7 +37,7 @@ func GetEnvironment(tmpl Template, args ...string) (Environment, error) {
 	return Environment(env), nil
 }
 
-func readEnvArg(arg string) (string, string, error) {
+func envReadArg(arg string) (string, string, error) {
 	eq := strings.Index(arg, "=")
 	if eq == -1 {
 		return "", "", errors.New("invalid argument '" + arg + "'")
@@ -49,7 +49,7 @@ func readEnvArg(arg string) (string, string, error) {
 	return arg[start:eq], arg[eq+1 : len(arg)], nil
 }
 
-func readEnvProps(tmpl Template) (map[string]string, error) {
+func envReadProps(tmpl Template) (map[string]string, error) {
 	reader, err := tmpl.Properties()
 	if err == NOT_FOUND {
 		return map[string]string{}, nil
