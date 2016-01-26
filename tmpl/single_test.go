@@ -30,7 +30,7 @@ func replace(t *testing.T, input, properties string) string {
 	r := strings.NewReader(input)
 	var o bytes.Buffer
 	props := toProps(properties)
-	err := WriteSingle(r, &o, props)
+	err := WriteSingle(Environment(props), r, &o)
 	if err != nil {
 		t.Fatal("Could not replace single ", err.Error())
 	}
@@ -62,5 +62,19 @@ func TestSingleMultilineReplacementEOL(t *testing.T) {
 	res := replace(t, "test\ntest2\n", "test=ing")
 	if res != "ing\ning2\n" {
 		t.Fatal("Expected ing\ning2 but got '" + res + "'")
+	}
+}
+
+func TestSubStringReplacement(t *testing.T) {
+	res := replace(t, "hello PROPERTY1", "PROPERTY1=property1")
+	if res != "hello property1\n" {
+		t.Fatal("Expected hello property1")
+	}
+}
+
+func TestMultipleReplacements(t *testing.T) {
+	res := replace(t, "hello PROP1 and PROP2", "PROP1=t1,PROP2=t2")
+	if res != "hello t1 and t2\n" {
+		t.Fatal("Expecting hello t1 and t2 but got", res)
 	}
 }

@@ -5,15 +5,19 @@ import "strings"
 import "bufio"
 import "errors"
 
-func WriteSingle(in io.Reader, out io.Writer, properties map[string]string) error {
-	replacements := make([]string, 2*len(properties))
+func (e Environment) Replacements() []string {
+	replacements := make([]string, 2*len(e))
 	i := 0
-	for key, value := range properties {
+	for key, value := range e {
 		replacements[i] = key
 		replacements[i+1] = value
-		i = i + 1
+		i = i + 2
 	}
-	replacer := strings.NewReplacer(replacements...)
+	return replacements
+}
+
+func WriteSingle(env Environment, in io.Reader, out io.Writer) error {
+	replacer := strings.NewReplacer(env.Replacements()...)
 
 	scanner := bufio.NewScanner(in)
 	for scanner.Scan() {
