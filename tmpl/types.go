@@ -11,6 +11,7 @@ type Target interface {
 }
 
 type Template interface {
+	Properties() (io.Reader, error)
 	Create(env Environment, target Target) error
 }
 

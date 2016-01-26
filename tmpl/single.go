@@ -1,17 +1,21 @@
 package tmpl
 
 import "io"
+import "sort"
 import "strings"
 import "bufio"
 import "errors"
 
 func (e Environment) Replacements() []string {
-	replacements := make([]string, 2*len(e))
-	i := 0
-	for key, value := range e {
-		replacements[i] = key
-		replacements[i+1] = value
-		i = i + 2
+	keys := []string{}
+	for key, _ := range e {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	replacements := make([]string, 2*len(keys))
+	for i, key := range keys {
+		replacements[i*2] = key
+		replacements[i*2+1] = e[key]
 	}
 	return replacements
 }
