@@ -1,6 +1,6 @@
 package tmpl
 
-func (fsRoot *fsRoot) Create(target Target) error {
+func (fsRoot *fsRoot) Create(env Environment, target Target) error {
 	list, err := fsRoot.List(FilterFileAllowAll)
 	if err != nil {
 		return err
@@ -14,8 +14,7 @@ func (fsRoot *fsRoot) Create(target Target) error {
 		if err != nil {
 			return err
 		}
-		var props map[string]string
-		err = WriteSingle(source, target, props)
+		err = WriteSingle(env, source, target)
 		if err != nil {
 			return err
 		}

@@ -7,29 +7,6 @@ import "path/filepath"
 import "sort"
 import "github.com/blang/vfs"
 
-var NOT_FOUND error = errors.New("does not exist")
-
-type Target interface {
-	Writer(path string) (io.Writer, error)
-}
-
-type Template interface {
-	Create(target Target) error
-}
-
-func NewTemplate(path string) (Template, error) {
-	return &fsRoot{vfs.OS(), path}, nil
-}
-
-func GetTarget(path string) (Target, error) {
-	return &fsRoot{vfs.OS(), path}, nil
-}
-
-type fsRoot struct {
-	fs   vfs.Filesystem
-	root string
-}
-
 func (fsRoot *fsRoot) Writer(path string) (io.Writer, error) {
 	realPath := fsRoot.root + string(fsRoot.fs.PathSeparator()) + path
 	dir := filepath.Dir(realPath)

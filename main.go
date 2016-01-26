@@ -20,7 +20,12 @@ func main() {
 		fmt.Println("Failed to create target %s\n", err.Error())
 		return
 	}
-	if err = template.Create(target); err != nil {
+	env, err := tmpl.GetEnvironment(template, os.Args[1:]...)
+	if err != nil {
+		fmt.Println("Failed to parse environment")
+		return
+	}
+	if err = template.Create(env, target); err != nil {
 		fmt.Printf("Failed to create template %s\n", err.Error())
 		return
 	}
