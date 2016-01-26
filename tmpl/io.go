@@ -1,9 +1,10 @@
 package tmpl
 
-import "os"
-import "io"
-import "path/filepath"
 import "errors"
+import "io"
+import "os"
+import "path/filepath"
+import "sort"
 import "github.com/blang/vfs"
 
 var NOT_FOUND error = errors.New("does not exist")
@@ -57,4 +58,58 @@ func (fsRoot *fsRoot) Reader(path string) (io.Reader, error) {
 		return nil, errors.New("could not open file " + realPath + " due to " + err.Error())
 	}
 	return file, nil
+}
+
+type FilterFile func(string, bool) bool
+
+func FilterFileAllowAll(path string, dir bool) bool {
+	return true
+}
+
+func (fsRoot *fsRoot) List(filter FilterFile) ([]string, error) {
+	root := fsRoot.root
+	if root[len(root)-1] != '/' {
+		root = root + string(fsRoot.fs.PathSeparator())
+	}
+
+	return listCollect(fsRoot.fs, root, "/", filter)
+}
+
+type byName []os.FileInfo
+
+func (l byName) Len() int {
+	return len(l)
+}
+
+func (l byName) Swap(i, j int) {
+	l[i], l[j] = l[j], l[i]
+}
+
+func (l byName) Less(i, j int) bool {
+	return l[i].Name() < l[j].Name()
+}
+
+func listCollect(fs vfs.Filesystem, realPath, virtualPath string, filter FilterFile) ([]string, error) {
+	files := []string{}
+	contents, err := fs.ReadDir(realPath)
+	if err != nil {
+		return nil, err
+	}
+	sort.Sort(byName(contents))
+	for _, content := range contents {
+		if content.IsDir() {
+			if filter(virtualPath+content.Name(), true) {
+				subfiles, err := listCollect(fs, realPath+content.Name()+"/", virtualPath+content.Name()+"/", filter)
+				if err != nil {
+					return nil, err
+				}
+				files = append(files, subfiles...)
+			}
+		} else {
+			if filter(virtualPath+content.Name(), false) {
+				files = append(files, virtualPath+content.Name())
+			}
+		}
+	}
+	return files, nil
 }

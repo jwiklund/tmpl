@@ -10,7 +10,7 @@ func main() {
 		fmt.Println("Usage: tmpl SOURCE")
 		return
 	}
-	template, err := tmpl.New(os.Args[1])
+	template, err := tmpl.NewTemplate(os.Args[1])
 	if err != nil {
 		fmt.Printf("Failed to read template %s\n", err.Error())
 		return
