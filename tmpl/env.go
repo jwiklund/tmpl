@@ -51,7 +51,7 @@ func envReadArg(arg string) (string, string, error) {
 
 func envReadProps(tmpl Template) (map[string]string, error) {
 	reader, err := tmpl.Properties()
-	if err == NOT_FOUND {
+	if err == notFound {
 		return map[string]string{}, nil
 	}
 	if err != nil {

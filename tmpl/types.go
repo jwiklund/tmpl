@@ -4,7 +4,7 @@ import "io"
 import "errors"
 import "github.com/blang/vfs"
 
-var NOT_FOUND error = errors.New("does not exist")
+var notFound error = errors.New("does not exist")
 
 type Target interface {
 	Writer(path string) (io.Writer, error)

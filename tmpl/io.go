@@ -32,7 +32,7 @@ func (fsRoot *fsRoot) Reader(path string) (io.Reader, error) {
 		pathError, isPathError := err.(*os.PathError)
 		if isPathError {
 			if pathError.Err.Error() == "file does not exist" {
-				return nil, NOT_FOUND
+				return nil, notFound
 			}
 			return nil, errors.New("could not open file due to " + err.Error())
 		}

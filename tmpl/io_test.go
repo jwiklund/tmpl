@@ -72,7 +72,7 @@ func TestIOReadMissing(t *testing.T) {
 	target := fsRoot{memfs.Create(), "/root"}
 	_, err := target.Reader("file")
 
-	if err != NOT_FOUND {
+	if err != notFound {
 		t.Fatal("expected not found", err)
 	}
 }
