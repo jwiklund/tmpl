@@ -16,7 +16,7 @@ func toProps(properties string) map[string]string {
 	return p
 }
 
-func TestProp(t *testing.T) {
+func TestSingleProp(t *testing.T) {
 	p := toProps("test=ing,test2=ing2")
 	if p["test"] != "ing" {
 		t.Fatal("test", p)
@@ -37,7 +37,7 @@ func replace(t *testing.T, input, properties string) string {
 	return o.String()
 }
 
-func TestNoReplacement(t *testing.T) {
+func TestSingleNoReplacement(t *testing.T) {
 	res := replace(t, "test", "")
 	if res != "test\n" {
 		t.Fatal("Expected 'test' but got '" + res + "'")
@@ -65,14 +65,14 @@ func TestSingleMultilineReplacementEOL(t *testing.T) {
 	}
 }
 
-func TestSubStringReplacement(t *testing.T) {
+func TestSingleSubStringReplacement(t *testing.T) {
 	res := replace(t, "hello PROPERTY1", "PROPERTY1=property1")
 	if res != "hello property1\n" {
 		t.Fatal("Expected hello property1")
 	}
 }
 
-func TestMultipleReplacements(t *testing.T) {
+func TestSingleMultipleReplacements(t *testing.T) {
 	res := replace(t, "hello PROP1 and PROP2", "PROP1=t1,PROP2=t2")
 	if res != "hello t1 and t2\n" {
 		t.Fatal("Expecting hello t1 and t2 but got", res)

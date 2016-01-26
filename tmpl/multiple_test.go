@@ -1,34 +1,9 @@
 package tmpl
 
-import "bytes"
 import "testing"
 import "github.com/blang/vfs/memfs"
 
-func testWrite(t *testing.T, root *fsRoot, name, value string) {
-	target, err := root.Writer(name)
-	if err != nil {
-		t.Fatal("could not create writer", err)
-	}
-	if _, err := target.Write([]byte(value)); err != nil {
-		t.Fatal("could not write", value)
-	}
-}
-
-func testRead(t *testing.T, root *fsRoot, name string) string {
-	source, err := root.Reader(name)
-	if err != nil {
-		t.Fatal("could not create reader", err)
-	}
-	var buf bytes.Buffer
-	_, err = buf.ReadFrom(source)
-	if err != nil {
-		t.Fatal("Could not read", err)
-	}
-	t.Log("read", name, "contents", buf.String())
-	return buf.String()
-}
-
-func TestSimpleCreate(t *testing.T) {
+func TestMultiSimpleCreate(t *testing.T) {
 	mem := memfs.Create()
 	source := &fsRoot{mem, "/source"}
 	target := &fsRoot{mem, "/target"}
@@ -45,7 +20,7 @@ func TestSimpleCreate(t *testing.T) {
 	}
 }
 
-func TestProperties(t *testing.T) {
+func TestMultiProperties(t *testing.T) {
 	mem := memfs.Create()
 	source := &fsRoot{mem, "/source"}
 	target := &fsRoot{mem, "/source"}
