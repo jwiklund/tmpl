@@ -6,7 +6,7 @@ import "github.com/blang/vfs/memfs"
 import "bytes"
 import "reflect"
 
-func TestWriteFile(t *testing.T) {
+func TestIOWriteFile(t *testing.T) {
 	fs := memfs.Create()
 	target := fsRoot{fs, "/root"}
 
@@ -37,7 +37,7 @@ func TestWriteFile(t *testing.T) {
 	}
 }
 
-func TestReadFile(t *testing.T) {
+func TestIOReadFile(t *testing.T) {
 	fs := memfs.Create()
 	fs.Mkdir("/root", 0775)
 	file, err := fs.OpenFile("/root/file", os.O_WRONLY|os.O_CREATE, 0664)
@@ -68,7 +68,7 @@ func TestReadFile(t *testing.T) {
 	}
 }
 
-func TestReadMissing(t *testing.T) {
+func TestIOReadMissing(t *testing.T) {
 	target := fsRoot{memfs.Create(), "/root"}
 	_, err := target.Reader("file")
 
@@ -77,7 +77,7 @@ func TestReadMissing(t *testing.T) {
 	}
 }
 
-func TestListEmpty(t *testing.T) {
+func TestIOListEmpty(t *testing.T) {
 	fs := memfs.Create()
 	fs.Mkdir("/root", 0775)
 	target := fsRoot{fs, "/root"}
@@ -92,7 +92,7 @@ func TestListEmpty(t *testing.T) {
 	}
 }
 
-func TestList(t *testing.T) {
+func TestIOList(t *testing.T) {
 	target := &fsRoot{memfs.Create(), "/root"}
 	testWrite(t, target, "sub1", "hello1")
 	testWrite(t, target, "sub2", "hello2")
@@ -108,7 +108,7 @@ func TestList(t *testing.T) {
 	}
 }
 
-func TestListSubs(t *testing.T) {
+func TestIOListSubs(t *testing.T) {
 	target := &fsRoot{memfs.Create(), "/root"}
 	testWrite(t, target, "sub1/leaf1", "hello1")
 	testWrite(t, target, "sub1/leaf2", "hello2")
@@ -125,7 +125,7 @@ func TestListSubs(t *testing.T) {
 	}
 }
 
-func TestListRead(t *testing.T) {
+func TestIOListRead(t *testing.T) {
 	target := &fsRoot{memfs.Create(), "/root"}
 	testWrite(t, target, "sub1", "hello")
 
