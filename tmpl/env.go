@@ -4,7 +4,15 @@ import "bufio"
 import "errors"
 import "strings"
 
-func (tmpl *fsRoot) GetEnvironment(args ...string) (Environment, error) {
+func (tmpl *fsRoot) getEnvironment(args ...string) (Environment, error) {
+	return getEnvironment(false, args)
+}
+
+func (tmpl *fsRoot) getProperties(args ...string) (Environment, error) {
+	return getEnvironment(true, args)
+}
+
+func (tmpl *fsRoot) getEnvironment(ignoreMissing bool, args ...string) (Environment, error) {
 	props, err := envReadProps(tmpl)
 	if err != nil {
 		return nil, err
@@ -30,7 +38,7 @@ func (tmpl *fsRoot) GetEnvironment(args ...string) (Environment, error) {
 		}
 		if len(value) > 0 {
 			env[key] = value
-		} else {
+		} else if !ignoreMissing {
 			return nil, errors.New("missing required property " + key)
 		}
 	}

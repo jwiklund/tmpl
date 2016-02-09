@@ -12,10 +12,9 @@ type Target interface {
 }
 
 type Template interface {
-	GetEnvironment(args ...string) (Environment, error)
+	Create(target Target, args ...string) error
 
-	Create(env Environment, target Target) error
-	Compare(env Environment, target Target) (Environment, error)
+	Compare(target Target, args ...string) (Environment, error)
 }
 
 type Environment map[string]string
