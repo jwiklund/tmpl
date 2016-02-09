@@ -21,10 +21,6 @@ func (fsRoot *fsRoot) Writer(path string) (io.Writer, error) {
 	return file, nil
 }
 
-func (fsRoot *fsRoot) Properties() (io.Reader, error) {
-	return fsRoot.Reader(".template")
-}
-
 func (fsRoot *fsRoot) Reader(path string) (io.Reader, error) {
 	realPath := fsRoot.root + string(fsRoot.fs.PathSeparator()) + path
 	file, err := fsRoot.fs.OpenFile(realPath, os.O_RDONLY, 0)

@@ -69,7 +69,7 @@ func TestEnvPropsBasic(t *testing.T) {
 func TestEnvNoArgs(t *testing.T) {
 	source := &fsRoot{memfs.Create(), "/source"}
 
-	env, err := GetEnvironment(source)
+	env, err := source.GetEnvironment()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -83,7 +83,7 @@ func TestEnvOneArg(t *testing.T) {
 	source := &fsRoot{memfs.Create(), "/source"}
 	testWrite(t, source, ".template", "key")
 
-	env, err := GetEnvironment(source, "key=value")
+	env, err := source.GetEnvironment("key=value")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -98,7 +98,7 @@ func TestEnvArgWithDefault(t *testing.T) {
 	source := &fsRoot{memfs.Create(), "/source"}
 	testWrite(t, source, ".template", "key [default value]\nother something else")
 
-	env, err := GetEnvironment(source, "other=value")
+	env, err := source.GetEnvironment("other=value")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -106,7 +106,6 @@ func TestEnvArgWithDefault(t *testing.T) {
 	if !reflect.DeepEqual(env.Replacements(), []string{"key", "value", "other", "value"}) {
 		t.Log(env.Replacements())
 		t.Fatal("wrong replacements")
-
 	}
 }
 
@@ -114,7 +113,7 @@ func TestEnvMissingArg(t *testing.T) {
 	source := &fsRoot{memfs.Create(), "/source"}
 	testWrite(t, source, ".template", "key")
 
-	_, err := GetEnvironment(source)
+	_, err := source.GetEnvironment()
 	if err == nil {
 		t.Fatal("Expected missing property")
 	}

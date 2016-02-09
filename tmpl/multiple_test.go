@@ -25,6 +25,7 @@ func TestMultiProperties(t *testing.T) {
 	source := &fsRoot{mem, "/source"}
 	target := &fsRoot{mem, "/source"}
 
+	testWrite(t, source, ".template", "PROPERTY1\nPROPERTY2")
 	testWrite(t, source, "template1", "hello PROPERTY1")
 	testWrite(t, source, "template2", "hello PROPERTY2")
 

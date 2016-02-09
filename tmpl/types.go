@@ -12,7 +12,7 @@ type Target interface {
 }
 
 type Template interface {
-	Properties() (io.Reader, error)
+	GetEnvironment(args ...string) (Environment, error)
 
 	Create(env Environment, target Target) error
 	Compare(env Environment, target Target) (Environment, error)

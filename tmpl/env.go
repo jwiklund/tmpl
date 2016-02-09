@@ -4,7 +4,7 @@ import "bufio"
 import "errors"
 import "strings"
 
-func GetEnvironment(tmpl Template, args ...string) (Environment, error) {
+func (tmpl *fsRoot) GetEnvironment(args ...string) (Environment, error) {
 	props, err := envReadProps(tmpl)
 	if err != nil {
 		return nil, err
@@ -37,20 +37,8 @@ func GetEnvironment(tmpl Template, args ...string) (Environment, error) {
 	return Environment(env), nil
 }
 
-func envReadArg(arg string) (string, string, error) {
-	eq := strings.Index(arg, "=")
-	if eq == -1 {
-		return "", "", errors.New("invalid argument '" + arg + "'")
-	}
-	start := 0
-	for start < len(arg) && arg[start] == '-' {
-		start = start + 1
-	}
-	return arg[start:eq], arg[eq+1 : len(arg)], nil
-}
-
-func envReadProps(tmpl Template) (map[string]string, error) {
-	reader, err := tmpl.Properties()
+func envReadProps(tmpl *fsRoot) (map[string]string, error) {
+	reader, err := tmpl.Reader(".template")
 	if err == notFound {
 		return map[string]string{}, nil
 	}
@@ -67,6 +55,18 @@ func envReadProps(tmpl Template) (map[string]string, error) {
 		return nil, err
 	}
 	return props, nil
+}
+
+func envReadArg(arg string) (string, string, error) {
+	eq := strings.Index(arg, "=")
+	if eq == -1 {
+		return "", "", errors.New("invalid argument '" + arg + "'")
+	}
+	start := 0
+	for start < len(arg) && arg[start] == '-' {
+		start = start + 1
+	}
+	return arg[start:eq], arg[eq+1 : len(arg)], nil
 }
 
 func readEnvProp(prop string) (string, string) {
